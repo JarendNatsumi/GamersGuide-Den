@@ -1,0 +1,43 @@
+  {% load static %}
+<!doctype html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="GG Den — cộng đồng guide và review game thủ.">
+  <title>{% block title %}Gamers Guide — GG Den{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <script defer src="{% static 'js/theme.js' %}"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="nav-wrap">
+    <a class="brand" href="{% url 'home' %}"><a class="brand" href="{% url 'home' %}">
+    <img class="brand-mark" src="{% static 'images/logo.png' %}" alt="GG Den Logo">
+    <span>Gamers<span class="brand-light">Guide</span></span>
+    </a></a>
+    <nav class="nav-links">
+      <a href="{% url 'home' %}">Khám phá</a>
+      <a href="{% url 'home' %}?type=guide">Guide</a>
+      <a href="{% url 'home' %}?type=review">Review</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Chuyển giao diện">☼ / ☾</button>
+      {% if user.is_authenticated %}
+        <a class="nav-muted" href="{% url 'my_posts' %}">Bài của tôi</a>
+        <a class="btn btn-primary btn-small" href="{% url 'post_create' %}">＋ Viết bài</a>
+        <form class="inline-form" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="link-button" type="submit">Đăng xuất</button></form>
+      {% else %}
+        <a class="nav-muted" href="{% url 'login' %}">Đăng nhập</a>
+        <a class="btn btn-primary btn-small" href="{% url 'register' %}">Đăng kí</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+<main class="page-shell">
+  {% if messages %}<div class="messages">{% for message in messages %}<div class="message">{{ message }}</div>{% endfor %}</div>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer"><div><img class="brand-mark" src="{% static 'images/logo.png' %}" alt="GG Den Logo"> <strong>Gamers Guide</strong> </div><p>Kiến thức game được chia sẻ bởi game thủ, dành cho game thủ.</p></footer>
+</body>
+</html>

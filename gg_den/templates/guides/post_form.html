@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ heading }} — GG Den{% endblock %}
+{% block content %}
+<div class="form-page"><a class="back-link" href="{% url 'home' %}">← Quay lại</a><div class="form-heading"><div class="eyebrow">CREATE / SHARE / LEVEL UP</div><h1>{{ heading }}</h1><p class="muted">Chia sẻ kinh nghiệm của bạn với cộng đồng game thủ.</p></div>
+<form method="post" enctype="multipart/form-data" class="panel-form">{% csrf_token %}
+  {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+  {% for field in form %}
+  <div class="field {% if field.name == 'content' %}field-full{% endif %}">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}
+    {% if field.help_text %}<small>{{ field.help_text|safe }}</small>{% endif %}
+    {% for error in field.errors %}<small class="error">{{ error }}</small>{% endfor %}
+  </div>
+  {% endfor %}
+  <div class="form-note">Bài đã xuất bản sẽ công khai và mọi người có thể đọc mà không cần đăng nhập.</div>
+  <div class="form-actions"><a class="btn btn-secondary" href="{% url 'home' %}">Hủy</a><button class="btn btn-primary" type="submit">Lưu bài viết ↗</button></div>
+</form></div>
+{% endblock %}

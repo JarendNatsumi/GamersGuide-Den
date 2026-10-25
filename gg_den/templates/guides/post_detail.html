@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — GG Den{% endblock %}
+{% block content %}
+<div class="detail-wrap">
+  <a class="back-link" href="{% url 'home' %}">← Quay lại khám phá</a>
+  <article class="article">
+    <div class="article-topline"><span class="type-label {{ post.post_type }}">{{ post.get_post_type_display }}</span>{% if post.game_name %}<span class="game-tag">{{ post.game_name }}</span>{% endif %}</div>
+    <h1>{{ post.title }}</h1><p class="article-excerpt">{{ post.excerpt }}</p>
+    <div class="article-byline"><span class="avatar avatar-large">{{ post.author.username|slice:":1"|upper }}</span><div><strong>{{ post.author.username }}</strong><span class="muted">Đăng ngày {{ post.created_at|date:"d/m/Y H:i" }} · {{ post.views }} lượt xem</span></div>
+      {% if user == post.author %}<div class="article-actions"><a class="btn btn-secondary btn-small" href="{% url 'post_edit' post.slug %}">Sửa bài</a><form method="post" action="{% url 'post_delete' post.slug %}" onsubmit="return confirm('Bạn có chắc muốn xóa bài viết này?')">{% csrf_token %}<button class="btn btn-danger btn-small" type="submit">Xóa</button></form></div>{% endif %}
+    </div>
+    {% if post.cover %}<img class="article-cover" src="{{ post.cover.url }}" alt="Ảnh bìa {{ post.title }}">{% endif %}
+    <div class="article-content">{{ post.content|linebreaks }}</div>
+    <div class="article-end"><span>GAMERS GUIDE/CHI TIẾT BÀI VIẾT</span><a href="{% url 'home' %}">Khám phá bài viết khác ↗</a></div>
+  </article>
+</div>
+{% endblock %}

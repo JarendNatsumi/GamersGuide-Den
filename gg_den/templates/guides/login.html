@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Đăng nhập — GG Den{% endblock %}
+{% block content %}
+<div class="auth-wrap"><div class="auth-brand"><div class="brand-mark huge">GG</div><div class="eyebrow">WELCOME BACK, PLAYER</div><h1>Tiếp tục hành trình.</h1><p>Đăng nhập để chia sẻ guide và review của bạn.</p></div>
+<form method="post" class="panel-form auth-form">{% csrf_token %}<h2>Đăng nhập</h2>{% if form.errors %}<p class="error">Tên tài khoản hoặc mật khẩu chưa đúng.</p>{% endif %}
+{% for field in form %}<div class="field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<small class="error">{{ error }}</small>{% endfor %}</div>{% endfor %}
+<button class="btn btn-primary btn-wide" type="submit">Đăng nhập ↗</button><p class="auth-switch">Chưa có tài khoản? <a href="{% url 'register' %}">Tham gia GG Den</a></p></form></div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Khám phá guide & review — GG Den{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">GAMER'S GUIDES BY GAMERS</div>
+    <h1>Bách khoa toàn thư của game thủ<br><span></span></h1>
+    <p>Website chia sẻ đầy đủ kiến thức về game của game thủ, dành cho game thủ</p>
+    <div class="hero-stats"><div><strong>Since 2026</strong><span>Published</span></div></div>
+  </div>
+</section>
+<section class="section-head">
+  <div><div class="eyebrow">THE COMMUNITY FEED</div><h2>{% if kind == 'guide' %}Guide nổi bật{% elif kind == 'review' %}Review từ game thủ{% else %}Bài viết mới nhất{% endif %}</h2><p class="muted">Tìm chiến thuật mới hoặc chọn tựa game tiếp theo của bạn.</p></div>
+  <form class="search-form" method="get" action="{% url 'home' %}">
+    {% if kind %}<input type="hidden" name="type" value="{{ kind }}">{% endif %}
+    <input name="q" value="{{ query }}" placeholder="Tìm game, guide, review..." aria-label="Tìm kiếm">
+    <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+  </form>
+</section>
+<div class="filter-row">
+  <a class="filter-chip {% if not kind %}active{% endif %}" href="{% url 'home' %}">Tất cả</a>
+  <a class="filter-chip {% if kind == 'guide' %}active{% endif %}" href="{% url 'home' %}?type=guide">Guide</a>
+  <a class="filter-chip {% if kind == 'review' %}active{% endif %}" href="{% url 'home' %}?type=review">Review</a>
+  {% if query %}<span class="muted search-label">Kết quả cho “{{ query }}”</span>{% endif %}
+</div>
+{% if page_obj.object_list %}
+<div class="post-grid">
+{% for post in page_obj %}
+  <article class="post-card">
+    <a class="cover-link" href="{{ post.get_absolute_url }}">
+      {% if post.cover %}<img class="post-cover" src="{{ post.cover.url }}" alt="Ảnh bìa {{ post.title }}">
+      {% else %}<div class="cover-placeholder cover-{{ forloop.counter|add:'0'|divisibleby:3|yesno:'three,one' }}"><span class="cover-code">{{ post.post_type|upper }} / HƯỚNG DẪN</span><span class="cover-title">{{ post.game_name|default:"PLAYER GUIDE" }}</span></div>{% endif %}
+      <span class="type-label {{ post.post_type }}">{{ post.get_post_type_display }}</span>
+    </a>
+    <div class="post-card-body">
+      {% if post.game_name %}<div class="game-tag">{{ post.game_name }}</div>{% endif %}
+      <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+      <p class="excerpt">{{ post.excerpt }}</p>
+      <div class="card-meta"><span class="avatar">{{ post.author.username|slice:":1"|upper }}</span><span>{{ post.author.username }}</span><span class="dot-sep">·</span><span>{{ post.created_at|date:"d/m/Y" }}</span><span class="views">◉ {{ post.views }}</span></div>
+    </div>
+  </article>
+{% endfor %}
+</div>
+{% else %}
+<div class="empty-state"><div class="empty-icon">⌕</div><h3>Chưa tìm thấy bài viết</h3><p>Thử từ khóa khác hoặc quay lại xem tất cả bài viết.</p><a class="btn btn-primary" href="{% url 'home' %}">Xem bài mới nhất</a></div>
+{% endif %}
+{% if page_obj.paginator.num_pages > 1 %}<div class="pagination">
+  {% if page_obj.has_previous %}<a href="?{% if kind %}type={{ kind }}&{% endif %}{% if query %}q={{ query|urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}">← Trước</a>{% endif %}
+  <span>Trang {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a href="?{% if kind %}type={{ kind }}&{% endif %}{% if query %}q={{ query|urlencode }}&{% endif %}page={{ page_obj.next_page_number }}">Tiếp →</a>{% endif %}
+</div>{% endif %}
+{% endblock %}
